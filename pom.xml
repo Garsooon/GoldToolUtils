@@ -6,7 +6,7 @@
 
     <groupId>com.garsooon</groupId>
     <artifactId>GoldToolUtils</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.0</version>
     <description>A lightweight utility plugin for extra functions on gold tools during weekends.</description>
 
     <properties>
