@@ -13,6 +13,9 @@ A simple lightweight plugin to add extra effects to gold tools on the weekends.
 - **Gold Axes**  
   When breaking logs, give charcoal instead of regular wood drops.
 
+- **Gold Shovels**  
+  When mining certain blocks get a percent chance to get an ore drop from a loot table with configurable drop rates in `config.properties`.
+
 - **Gold Hoes**  
   Yield triple the normal crop drops.  
 
