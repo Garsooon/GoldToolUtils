@@ -1,14 +1,10 @@
-name: build-and-test
+name: Release Workflow
+
 on:
-  pull_request:
-    types:
-      - opened
-      - synchronize
-      - reopened
   push:
     branches:
-      - master
       - main
+      - master
 
 jobs:
   build:
@@ -24,18 +20,33 @@ jobs:
           distribution: 'temurin'
           java-version: 8
 
-      - name: Set up Maven
-        uses: stCarolas/setup-maven@v4.5
-        with:
-          maven-version: 3.9.1
+      - name: Get the version from pom.xml
+        id: get_version
+        run: echo "PROJECT_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_ENV
 
-      - name: build application
-        shell: bash
+      - name: Fail if snapshot version
         run: |
-          mvn clean install
+          if [[ $PROJECT_VERSION == *"-SNAPSHOT"* ]]; then
+            echo "Snapshot versions are not releasable"
+            exit 0
+          fi
 
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
+      - name: Build with Maven
+        run: mvn clean package
+
+      - name: Verify JAR exists
+        run: |
+          if ! ls target/*.jar 1> /dev/null 2>&1; then
+            echo "No JAR file found in target/. Aborting release."
+            exit 1
+          fi
+
+      - name: Create GitHub Release
+        if: ${{ !endsWith(env.PROJECT_VERSION, '-SNAPSHOT') }}
+        uses: softprops/action-gh-release@da05d552573ad5aba039eaac05058a918a7bf631
         with:
-          name: ${{ github.event.repository.name }}-artifact
-          path: target/*.jar
+          tag_name: ${{ env.PROJECT_VERSION }}
+          files: |
+            target/*.jar
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_RELEASE_TOKEN }}
