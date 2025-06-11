@@ -1,0 +1,12 @@
+name: GoldToolUtils
+main: com.garsooon.goldtoolsutil.GoldToolUtils
+version: 1.0.0
+author: Garsooon
+description: Simple lightweight plugin that adds special effects to gold tools over the weekend
+website: https://github.com/garsooon/GoldToolUtils
+api-version: 1.7.3
+
+load: STARTUP
+
+# No commands needed for this plugin since it's all event-based
+# No permissions needed since it affects all players equally
